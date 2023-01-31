@@ -1,15 +1,17 @@
 <template>
     <div>
-        <h1>Work in Progress</h1>
+        <!-- <h1>Work in Progress</h1> -->
+        <HeaderComp/>
     </div>
 </template>
 
 
 <script>
+import HeaderComp from "../components/HeaderComp.vue"
 export default {
     name: "App",
     components: {
-        // qui inseriamo i futuri componenti per questa vue
+        HeaderComp
     }
 }
 </script>
