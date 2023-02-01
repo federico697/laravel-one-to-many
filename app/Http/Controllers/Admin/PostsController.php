@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Post;
 
 class PostsController extends Controller
 {
@@ -14,7 +15,11 @@ class PostsController extends Controller
      */
     public function index()
     {
-        return view('admin.posts.index');
+        $data = [
+            'posts' => Post::paginate(10)
+        ];
+
+        return view('admin.posts.index', $data);
     }
 
     /**
@@ -24,7 +29,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -35,7 +40,19 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        // validazione
+        $request->validate([
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        $newPost = new Post();
+        $newPost->fill($data);
+        $newPost->save();
+
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -46,7 +63,8 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        $singolo_post = Post::findOrFail($id);
+        return view('admin.posts.show', compact('singolo_post'));
     }
 
     /**
@@ -57,7 +75,9 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -69,7 +89,12 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $singoloPost = Post::findOrFail($id);
+
+        $singoloPost->update($data);
+
+        return redirect()->route('admin.posts.show', $singoloPost->id);
     }
 
     /**
@@ -80,6 +105,9 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $singoloPost = Post::findOrFail($id);
+        $singoloPost->delete();
+
+        return redirect()->route('admin.posts.index');
     }
 }
