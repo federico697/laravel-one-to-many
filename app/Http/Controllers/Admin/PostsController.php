@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
-
+use App\Category;
 class PostsController extends Controller
 {
     /**
@@ -16,7 +17,7 @@ class PostsController extends Controller
     public function index()
     {
         $data = [
-            'posts' => Post::paginate(10)
+            'posts' => Post::with('category')->paginate(10)
         ];
 
         return view('admin.posts.index', $data);
@@ -29,7 +30,12 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $data = [
+            'categories' => Category::All()
+        ];
+
+
+        return view('admin.posts.create', $data);
     }
 
     /**
@@ -41,7 +47,6 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
         // validazione
         $request->validate([
             'title' => 'required',
