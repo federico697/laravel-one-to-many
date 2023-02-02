@@ -8,6 +8,13 @@ class Post extends Model
 {
     protected $fillable = [
         'title',
-        'body'
+        'body',
+        'category_id'
     ];
+
+    public function category(){
+        // funzione di relazione
+        // il post ha una sola categoria associata
+        return $this->belongsTo('App/Category');
+    }
 }
